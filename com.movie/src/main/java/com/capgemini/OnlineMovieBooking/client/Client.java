@@ -1,5 +1,6 @@
 package com.capgemini.OnlineMovieBooking.client;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import com.capgemini.OnlineMovieBooking.Dao.TheatreDao;
@@ -11,6 +12,7 @@ import com.capgemini.OnlineMovieBooking.Exception.InvalidScreenIDException;
 import com.capgemini.OnlineMovieBooking.Repository.MovieRepository;
 import com.capgemini.OnlineMovieBooking.Repository.ScreenRepository;
 import com.capgemini.OnlineMovieBooking.Repository.TheatreRepository;
+import com.capgemini.OnlineMovieBooking.services.ItheatreService;
 import com.capgemini.OnlineMovieBooking.services.TheatreService;
 
 public class Client {
@@ -27,7 +29,7 @@ public class Client {
 		Theatre theatre2=TheatreRepository.theatreMap.get(2001);
 		Theatre theatre3=TheatreRepository.theatreMap.get(2002);
 		Theatre theatre4=TheatreRepository.theatreMap.get(2003);
-		TheatreService service=new TheatreService();
+		ItheatreService service=new TheatreService();
 		// Adding Movies to a particular Theatre
 		service.addMovie(theatre1.getTheatreId(), MovieRepository.movieMap.get(3000));
 		service.addMovie(theatre1.getTheatreId(), MovieRepository.movieMap.get(3001));
@@ -51,23 +53,30 @@ public class Client {
 								+ "4.To Search Screen in Particular Theatre"+"\n"
 										+ "5.Exit");
 		System.out.println("Enter Choice");
-		int choice=input.nextInt();
+		String choice;
+		try
+		{
+		choice=input.next();
+		if(!choice.matches("[0-9]*"))
+		{
+			throw new Exception("Please Enter only Integers ranging from 0-9");
+		}
 		switch(choice) {
-		case 1:
+		case "1":
 		{
 			System.out.println("Enter theatre ID to see details of Theatre:");
 			int theatre_id=input.nextInt();
 			display.showTheatreDetails(theatre_id);
 			break;
 		}
-		case 2:
+		case "2":
 		{
 			System.out.println("Enter theatre ID to see Available Movies in Theatre:");
 			int theatre_id=input.nextInt();
 			display.AvailableMovies(theatre_id);
 			break;
 		}
-		case 3:
+		case "3":
 		{
 			
 			System.out.println("1.To search in Geeta Multiplex:"+"\n"
@@ -120,14 +129,14 @@ public class Client {
 			break  ;
 			
 		}
-		case 4:
+		case "4":
 		{
 			System.out.println("Enter Screen ID to see Available Screens in Theatre:");
 			int theatre_id=input.nextInt();
 			display.printScreenDetails(theatre1.searchScreen(theatre_id),theatre1);
 			break;
 		}
-		case 5:
+		case "5":
 		{
 			System.out.println("Have a Nice Day");
 			System.exit(0);
@@ -139,6 +148,12 @@ public class Client {
 							
 		 }
 		}
+		catch(Exception inputMisMatch)
+		{
+			System.out.println(inputMisMatch.getMessage());
+		}
+		}
+		
 		
 		
 	}
